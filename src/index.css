@@ -14,12 +14,7 @@ button {
   cursor: pointer;
 }
 
-.tts-section {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.tts-section p {
+.audio-player p {
   margin: 10px 0;
   word-wrap: break-word;
 }

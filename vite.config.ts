@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         popup: './src/popup.tsx', // Relative path
         content: './src/content.ts', // Relative path
+        background: './src/background.ts', // Relative path
       },
       output: {
         entryFileNames: '[name].js',

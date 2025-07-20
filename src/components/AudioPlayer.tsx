@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AudioPlayer: React.FC = () => {
-  
   const [selectedText, setSelectedText] = useState<string>('');
 
   const getSelectedText = async () => {
@@ -21,54 +20,24 @@ const AudioPlayer: React.FC = () => {
     }
   };
 
-  const speakText = async () => {  
-    if (!selectedText || selectedText === 'No text selected') {  
-      alert('Please select text on the webpage first.');  
-      return;  
-    }  
-    
-    try {  
-      const formData = new FormData();  
-      formData.append('text', selectedText);  
-    
-      // Step 1: Generate TTS and get filename  
-      const response = await fetch('http://127.0.0.1:8000/tts', {  
-        method: 'POST',  
-        body: formData,  
-      });  
-    
-      if (!response.ok) {  
-        throw new Error('TTS request failed');  
-      }  
-    
-      const data = await response.json(); // This returns {filename: "tts_uuid.wav"}  
-        
-      // Step 2: Fetch the actual audio file  
-      const audioResponse = await fetch(`http://127.0.0.1:8000/audio/${data.filename}`);  
-        
-      if (!audioResponse.ok) {  
-        throw new Error('Failed to fetch audio file');  
-      }  
-        
-      const audioBlob = await audioResponse.blob();  
-      const audioUrl = URL.createObjectURL(audioBlob);  
-      const audio = new Audio(audioUrl);  
-      audio.play();  
-        
-    } catch (error) {  
-      console.error('TTS error:', error);  
-      alert('Failed to generate speech. Ensure the local TTS server is running at http://127.0.0.1:8000.');  
-    }  
+  useEffect(() => {
+    getSelectedText(); // Automatically fetch selected text when popup opens
+  }, []);
+
+  const speakText = () => {
+    if (!selectedText || selectedText === 'No text selected') {
+      alert('Please select text on the webpage first.');
+      return;
+    }
+    chrome.runtime.sendMessage({ action: 'playTTS', text: selectedText });
   };
 
   return (
-    <div className='audio-player'>
-      <div className="tts-section">
-        <h2>Text-to-Speech</h2>
-        <button onClick={getSelectedText}>Get Selected Text</button>
-        <p>Selected: {selectedText}</p>
-        <button onClick={speakText}>Speak Selected Text</button>
-      </div>
+    <div className="audio-player">
+      <h2>Text-to-Speech</h2>
+      <p>Selected: {selectedText}</p>
+      <button onClick={speakText}>Speak Selected Text</button>
+      <button onClick={getSelectedText}>Refresh Selected Text</button>
     </div>
   );
 };

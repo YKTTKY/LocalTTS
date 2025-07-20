@@ -1,0 +1,25 @@
+body {
+  width: 300px;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.audio-player {
+  text-align: center;
+}
+
+button {
+  margin: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.tts-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.tts-section p {
+  margin: 10px 0;
+  word-wrap: break-word;
+}
